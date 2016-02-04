@@ -5,6 +5,17 @@ A tool to track your Hearthstone collection and decks.
 ## API Documentation
 
 ### Index
+1. [Create a new user](#create-a-new-user)
+1. [Get a list of Cards](#get-a-list-of-cards)
+1. [Get a Card's details](#get-a-cards-details)
+1. [Get Collection](#get-collection)
+1. [Add a Card to Collection](#add-a-card-to-collection)
+1. [Remove a Card from Collection](#remove-a-card-from-collection)
+1. [Create a Deck](#create-a-deck)
+1. [Get a list of Decks](#get-a-list-of-decks)
+1. [Get details of a Deck](#get-details-of-a-deck)
+1. [Update a Deck](#update-a-deck)
+1. [Delete a Deck](#delete-a-deck)
 
 
 ### Users
@@ -93,13 +104,12 @@ A tool to track your Hearthstone collection and decks.
 
 ## Collection
 
-#### Get my collection
+#### Get Collection
 
-**GET:** `/collection/`
+**GET:** `/collection`
 
 **Query Parameters:**
-
-* query params
+- query params for filtering
 
 **Response:**
 ```json
@@ -157,7 +167,7 @@ A tool to track your Hearthstone collection and decks.
 * `404` if `id` does not exist
 
 
-#### Add a Card to Collection
+#### Remove a Card from Collection
 
 **PUT:** `/collection/remove`
 
@@ -220,9 +230,9 @@ A tool to track your Hearthstone collection and decks.
 }```
 
 **Status Codes:**
-* `201` if successful
-* `400` if incorrect data provided
-* `409` if unique constraint violation
+- `201` if successful
+- `400` if incorrect data provided
+- `409` if unique constraint violation
 
 
 #### Get a list of Decks
@@ -259,9 +269,7 @@ A tool to track your Hearthstone collection and decks.
 ```
 
 **Status Codes:**
-* `201` if successful
-* `400` if incorrect data provided
-* `409` if unique constraint violation
+- `200` if successful
 
 
 #### Get details of a Deck
@@ -291,85 +299,64 @@ A tool to track your Hearthstone collection and decks.
 ```
 
 **Status Codes:**
-* `201` if successful
-* `400` if incorrect data provided
-* `409` if unique constraint violation
+- `201` if successful
+- `400` if incorrect data provided
+- `409` if unique constraint violation
 
 
 #### Update a Deck
 
-**GET:** `/deck/:id`
+**PATCH:** `/deck/:id`
 
-**Body:** None
+**Body:** 
+```json
+{
+    "name": "Aggro Druid"
+}
+
+**Notes:**
+The following fields can be edited:
+- `name`
+- `cards`
 
 **Response:**
 ```json
-[
-    {
-        "name": "Midrange Druid",
-        "hero": "druid",
-        "cards": [
-            {"id": 1124, "count": 2},
-            ...
-        ],
-        "missing_cards": [],
-        "mana_curve": [2, 8, 7, 3, 4, 3, 2, 1]
-    },
-    {
-        "name": "Aggro Warrior",
-        "hero": "warrior",
-        "cards": [
-            {"id": 365, "count": 2},
-            {"id": 447, "count": 1},
-            ...
-        ],
-        "missing_cards": [],
-        "mana_curve": [0, 3, 7, 6, 6, 4, 2, 2]
-    }
-]
+{
+    "name": "Aggro Druid",
+    "hero": "druid",
+    "cards": [
+        {
+            "id": 1124,
+            "mana": 2,
+            "name": "Wild Growth",
+            "card_type": "spell",
+            "class": "druid",
+            "count": 2
+        },
+        ...
+    ],
+    "missing_cards": [],
+    "mana_curve": [2, 8, 7, 3, 4, 3, 2, 1]
+}
 ```
 
 **Status Codes:**
-* `201` if successful
-* `400` if incorrect data provided
-* `409` if unique constraint violation
+- `200` if successful
+- `400` if incorrect data provided
+- `401` if invalid or missing auth
+- `404` if deck is not found
+- `409` if unique constraint violation
 
 
-#### Get details of a Deck
+#### Delete a Deck
 
-**GET:** `/deck/:id`
+**DELETE:** `/deck/:id`
 
 **Body:** None
 
-**Response:**
-```json
-[
-    {
-        "name": "Midrange Druid",
-        "hero": "druid",
-        "cards": [
-            {"id": 1124, "count": 2},
-            ...
-        ],
-        "missing_cards": [],
-        "mana_curve": [2, 8, 7, 3, 4, 3, 2, 1]
-    },
-    {
-        "name": "Aggro Warrior",
-        "hero": "warrior",
-        "cards": [
-            {"id": 365, "count": 2},
-            {"id": 447, "count": 1},
-            ...
-        ],
-        "missing_cards": [],
-        "mana_curve": [0, 3, 7, 6, 6, 4, 2, 2]
-    }
-]
-```
+**Response:** None
 
 **Status Codes:**
-* `201` if successful
-* `400` if incorrect data provided
-* `409` if unique constraint violation
+- `204` if successful
+- `404` if deck not found
 
