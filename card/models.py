@@ -35,3 +35,6 @@ class Collection(models.Model):
     card = models.ForeignKey(Card)
 
     count = models.SmallIntegerField()
+
+    class Meta:
+        unique_together = ('user', 'card')
