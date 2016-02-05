@@ -73,5 +73,9 @@ class Migration(migrations.Migration):
             name='users',
             field=models.ManyToManyField(related_name='collection', through='card.Collection', to=settings.AUTH_USER_MODEL),
         ),
+        migrations.AlterUniqueTogether(
+            name='collection',
+            unique_together=set([('user', 'card')]),
+        ),
         migrations.RunPython(add_cards, drop_cards)
     ]

@@ -17,3 +17,6 @@ class CardInDeck(models.Model):
     card = models.ForeignKey("card.Card")
 
     count = models.SmallIntegerField()
+
+    class Meta:
+        unique_together = ('deck', 'card')
