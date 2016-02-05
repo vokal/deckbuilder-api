@@ -2,66 +2,88 @@
 A tool to track your Hearthstone collection and decks.
 
 
-## Users
+## API Documentation
+
+### Index
+1. [Create a new user](#create-a-new-user)
+1. [Get a list of Cards](#get-a-list-of-cards)
+1. [Get a Card's details](#get-a-cards-details)
+1. [Get Collection](#get-collection)
+1. [Add a Card to Collection](#add-a-card-to-collection)
+1. [Remove a Card from Collection](#remove-a-card-from-collection)
+1. [Create a Deck](#create-a-deck)
+1. [Get a list of Decks](#get-a-list-of-decks)
+1. [Get details of a Deck](#get-details-of-a-deck)
+1. [Update a Deck](#update-a-deck)
+1. [Delete a Deck](#delete-a-deck)
+
+
+### Users
 
 #### Create a new user
 
-**POST:**
-```
-/user
-```
+**POST:** `/user`
 
 **Body:**
 ```json
 {
-  "username": "joe_user",
-  "email": "user@example.com",
-  "password": "password"
+    "username": "joe_user",
+    "email": "user@example.com",
+    "password": "password"
 }
 ```
 
 **Response:**
 ```json
 {
-  "id": 1,
-  "email": "email@email.com",
-  "username": "joe_user",
-  "first_name": "",
-  "last_name": "Name",
+    "id": 1,
+    "email": "email@email.com",
+    "username": "joe_user",
+    "first_name": "",
+    "last_name": ""
 }
 ```
 
 **Status Codes:**
 * `201` if successful
-* `400` if improper request
+* `400` if invalid data
 
-## Cards
 
-### Get a list of Cards
+### Cards
 
-**GET:** `/cards`
+#### Get a list of Cards
+
+**GET:** `/card`
 
 **Query Parameters:**
-
-* `q`: search term
-* `set`: if included filter on ['basic', 'classic', 'reward', 'naxx', 'gvg', 'brm, 'tgt', 'loe']
+- `q`: search term
+- `set`: if included filter on `basic`, `classic`, `reward`, `naxx`, `gvg`, `brm, `tgt`, `loe`
 
 **Response:**
 ```json
-{[
+[
     {
         "id": 1124,
         "mana": 2,
         "name": "Wild Growth",
         "card_type": "spell"
     },
-]}```
+    {
+        "id": 365,
+        "mana": 3,
+        "name": "Warsong Commander",
+        "card_type": "minion"
+    },
+    ...
+]
+```
 
 **Status Codes:**
 * `200` if successful
 * `400` if invalid query parameters
 
-### Get a Card
+
+#### Get a Card's details
 
 **GET:** `/card/:id`
 
@@ -79,19 +101,19 @@ A tool to track your Hearthstone collection and decks.
 * `200` if successful
 * `404` if does not exist
 
+
 ## Collection
 
-### Get my collection
+#### Get Collection
 
-**GET:** `/collection/`
+**GET:** `/collection`
 
 **Query Parameters:**
-
-* query params
+- query params for filtering
 
 **Response:**
 ```json
-{[
+[
     {
         "id": 1124,
         "mana": 2,
@@ -99,7 +121,14 @@ A tool to track your Hearthstone collection and decks.
         "card_type": "spell",
         "count": 3
     },
-]}
+    {
+        "id": 400,
+        "mana": 1,
+        "name": "Arcane Missles",
+        "card_type": "spell",
+        "count": 2
+    },
+]
 ```
 
 **Status Codes:**
@@ -107,9 +136,10 @@ A tool to track your Hearthstone collection and decks.
 * `400` if invalid query parameters
 * `401` if invalid credentials
 
-### Add/Remove a card to my collection
 
-**PUT:** `/collection/[add|remove]`
+#### Add a Card to Collection
+
+**PUT:** `/collection/add`
 
 **Body:**
 ```json
@@ -134,13 +164,44 @@ A tool to track your Hearthstone collection and decks.
 * `200` if successful
 * `400` if invalid data
 * `401` if invalid credentials
-* `404` if does not exist
+* `404` if `id` does not exist
 
-## Decks
 
-### Create Deck
+#### Remove a Card from Collection
 
-**POST:** `/decks``
+**PUT:** `/collection/remove`
+
+**Body:**
+```json
+{
+    "id": 400,
+    "count": 1
+}
+```
+
+**Response:**
+```json
+{
+    "id": 400,
+    "mana": 1,
+    "name": "Arcane Missles",
+    "card_type": "spell",
+    "count": 1
+}
+```
+
+**Status Codes:**
+* `200` if successful
+* `400` if invalid data
+* `401` if invalid credentials
+* `404` if `id` does not exist
+
+
+### Decks
+
+#### Create a Deck
+
+**POST:** `/deck`
 
 **Body:**
 ```json
@@ -148,8 +209,8 @@ A tool to track your Hearthstone collection and decks.
     "name": "Midrange Druid",
     "hero": "druid",
     "cards": [
-        {"1124": 2},
-
+        {"id": 1124, "count": 2},
+        ...
     ]
 }
 ```
@@ -157,16 +218,145 @@ A tool to track your Hearthstone collection and decks.
 **Response:**
 ```json
 {
+    "id": 7,
     "name": "Midrange Druid",
     "hero": "druid",
     "cards": [
-        {"1124": 2},
+        {"id": 1124, "count": 2},
+        ...
     ],
     "missing_cards": [],
-    "mana_curve": [2,8,7,3,4,3,2,1]
+    "mana_curve": [2, 8, 7, 3, 4, 3, 2, 1]
 }```
 
 **Status Codes:**
-* `201` if successful
-* `400` if incorrect data provided
-* `409` if unique constraint violation
+- `201` if successful
+- `400` if incorrect data provided
+- `409` if unique constraint violation
+
+
+#### Get a list of Decks
+
+**GET:** `/deck`
+
+**Body:** None
+
+**Response:**
+```json
+[
+    {
+        "name": "Midrange Druid",
+        "hero": "druid",
+        "cards": [
+            {"id": 1124, "count": 2},
+            ...
+        ],
+        "missing_cards": [],
+        "mana_curve": [2, 8, 7, 3, 4, 3, 2, 1]
+    },
+    {
+        "name": "Aggro Warrior",
+        "hero": "warrior",
+        "cards": [
+            {"id": 365, "count": 2},
+            {"id": 447, "count": 1},
+            ...
+        ],
+        "missing_cards": [],
+        "mana_curve": [0, 3, 7, 6, 6, 4, 2, 2]
+    }
+]
+```
+
+**Status Codes:**
+- `200` if successful
+
+
+#### Get details of a Deck
+
+**GET:** `/deck/:id`
+
+**Body:** None
+
+**Response:**
+```json
+{
+    "name": "Midrange Druid",
+    "hero": "druid",
+    "cards": [
+        {
+            "id": 1124,
+            "mana": 2,
+            "name": "Wild Growth",
+            "card_type": "spell",
+            "class": "druid",
+            "count": 2
+        }
+    ],
+    "missing_cards": [],
+    "mana_curve": [2, 8, 7, 3, 4, 3, 2, 1]
+}
+```
+
+**Status Codes:**
+- `201` if successful
+- `400` if incorrect data provided
+- `409` if unique constraint violation
+
+
+#### Update a Deck
+
+**PATCH:** `/deck/:id`
+
+**Body:** 
+```json
+{
+    "name": "Aggro Druid"
+}
+
+**Notes:**
+The following fields can be edited:
+- `name`
+- `cards`
+
+**Response:**
+```json
+{
+    "name": "Aggro Druid",
+    "hero": "druid",
+    "cards": [
+        {
+            "id": 1124,
+            "mana": 2,
+            "name": "Wild Growth",
+            "card_type": "spell",
+            "class": "druid",
+            "count": 2
+        },
+        ...
+    ],
+    "missing_cards": [],
+    "mana_curve": [2, 8, 7, 3, 4, 3, 2, 1]
+}
+```
+
+**Status Codes:**
+- `200` if successful
+- `400` if incorrect data provided
+- `401` if invalid or missing auth
+- `404` if deck is not found
+- `409` if unique constraint violation
+
+
+#### Delete a Deck
+
+**DELETE:** `/deck/:id`
+
+**Body:** None
+
+**Response:** None
+
+**Status Codes:**
+- `204` if successful
+- `404` if deck not found
+
