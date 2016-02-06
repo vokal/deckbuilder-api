@@ -61,21 +61,40 @@ A tool to track your Hearthstone collection and decks.
 
 **Response:**
 ```json
-[
-    {
-        "id": 1124,
-        "mana": 2,
-        "name": "Wild Growth",
-        "card_type": "spell"
-    },
-    {
-        "id": 365,
-        "mana": 3,
-        "name": "Warsong Commander",
-        "card_type": "minion"
-    },
-    ...
-]
+{
+    "count": 741,
+    "next": "http://testserver/card/?page=2",
+    "previous": null,
+    "results": [
+        {
+            "id": 1,
+            "name": "Mind Control",
+            "mana": 10,
+            "hero": "priest",
+            "card_type": "spell",
+            "card_set": "basic",
+            "rarity": "common",
+            "text": "Take control of an enemy minion.",
+            "tribe": null,
+            "attack": null,
+            "health": null
+        },
+        {
+            "id": 2,
+            "name": "Prophet Velen",
+            "mana": 7,
+            "hero": "priest",
+            "card_type": "minion",
+            "card_set": "classic",
+            "rarity": "legendary",
+            "text": "Double the damage and healing of your spells and Hero Power.",
+            "tribe": null,
+            "attack": 7,
+            "health": 7
+        },
+        ...
+    ]
+}
 ```
 
 **Status Codes:**
@@ -90,10 +109,17 @@ A tool to track your Hearthstone collection and decks.
 **Response:**
 ```json
 {
-    "id": 1124,
-    "mana": 2,
-    "name": "Wild Growth",
-    "card_type": "spell"
+    "health": null,
+    "mana": 10,
+    "attack": null,
+    "card_type": "spell",
+    "rarity": "common",
+    "text": "Take control of an enemy minion.",
+    "card_set": "basic",
+    "hero": "priest",
+    "id": 1,
+    "name": "Mind Control",
+    "tribe": null
 }
 ```
 

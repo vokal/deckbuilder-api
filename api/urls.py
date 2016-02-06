@@ -13,5 +13,5 @@ urlpatterns = router.urls
 
 
 urlpatterns += [
-    url(r'^user$', UserCreateView.as_view())
+    url(r'^user$', UserCreateView.as_view(), name='register')
 ]
